@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spark-cluster-opendatahub
+  labels:
+    radanalytics.io/kind: SparkCluster
+    app: jupyterhub
+    component: spark-operator
+data:
+  config: |-
+    worker:
+      instances: $(workerNodeCount)
+      memory: 2Gi
+      cpu: 2
+    master:
+      instances: $(masterNodeCount)
+      memory: 1Gi
+      cpu: 1
+    customImage: quay.io/radanalyticsio/openshift-spark:2.4-latest
+    env:
+    - name: SPARK_METRICS_ON
+      value: prometheus

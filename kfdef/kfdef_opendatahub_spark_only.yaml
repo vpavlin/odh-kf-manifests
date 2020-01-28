@@ -1,0 +1,31 @@
+apiVersion: kfdef.apps.kubeflow.org/v1beta1
+kind: KfDef
+metadata:
+  clusterName: api-cluster-odh-7e9e-odh-7e9e-example-opentlc-com:6443
+  creationTimestamp: null
+  name: kfdef
+  namespace: kubeflow
+spec:
+  applications:
+  - kustomizeConfig:
+      parameters:
+      - name: workerNodeCount
+        value: "2"
+      - name: masterNodeCount
+        value: "1"
+      repoRef:
+        name: odh-manifests
+        path: spark/odh-spark-operator
+    name: odh-spark-operator
+  repos:
+  - name: manifests
+    uri: https://github.com/opendatahub-io/manifests/archive/v0.7-branch-openshift.tar.gz
+  - name: odh-manifests
+    uri: https://github.com/vpavlin/odh-kf-manifests/archive/master.tar.gz
+  version: v0.7-branch-openshift
+status:
+  reposCache:
+  - localPath: '"kfdef/.cache/manifests/manifests-0.7-branch-openshift"'
+    name: manifests
+  - localPath: '"kfdef/.cache/odh-manifests/odh-kf-manifests-master"'
+    name: odh-manifests
