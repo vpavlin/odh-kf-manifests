@@ -1,0 +1,54 @@
+apiVersion: kfdef.apps.kubeflow.org/v1beta1
+kind: KfDef
+metadata:
+  clusterName: api-cluster-odh-7e9e-odh-7e9e-example-opentlc-com:6443
+  creationTimestamp: null
+  name: kfdef
+  namespace: kubeflow
+spec:
+  applications:
+  - kustomizeConfig:
+      overlays:
+      - istio
+      repoRef:
+        name: manifests
+        path: jupyter/jupyter-web-app
+    name: jupyter-web-app
+  - kustomizeConfig:
+      repoRef:
+        name: odh-manifests
+        path: jupyter/jupyter-web-app
+    name: jupyter-web-app
+  - kustomizeConfig:
+      overlays:
+      - istio
+      - openshift
+  #    - crc # If you're running on Code Ready Containers (CRC), you will need this overlay to work around issue https://github.com/code-ready/crc/issues/814
+      repoRef:
+        name: manifests
+        path: metadata
+    name: metadata
+  - kustomizeConfig:
+      overlays:
+      - istio
+      - openshift # We need to use custom controller to overcome fsGroup issue https://github.com/kubeflow/kubeflow/issues/4617
+      repoRef:
+        name: manifests
+        path: jupyter/notebook-controller
+    name: notebook-controller
+  - kustomizeConfig:
+      parameters:
+      - name: workerNodeCount
+        value: "2"
+      - name: masterNodeCount
+        value: "1"
+      repoRef:
+        name: odh-manifests
+        path: spark/odh-spark-operator
+    name: odh-spark-operator
+  repos:
+  - name: manifests
+    uri: /home/vpavlin/devel/github.com/vpavlin/manifests #https://github.com/opendatahub-io/manifests/archive/v0.7-branch-openshift.tar.gz
+  - name: odh-manifests
+    uri: /home/vpavlin/devel/github.com/vpavlin/odh-kf-manifests #https://github.com/vpavlin/odh-kf-manifests/archive/master.tar.gz
+  version: v0.7-branch-openshift
