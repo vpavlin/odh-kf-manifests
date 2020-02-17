@@ -1,0 +1,23 @@
+apiVersion: kfdef.apps.kubeflow.org/v1
+kind: KfDef
+metadata:
+  creationTimestamp: null
+  name: spark-operator
+  namespace: kubeflow-spark
+spec:
+  applications:
+  - kustomizeConfig:
+      parameters:
+      - name: workerNodeCount
+        value: "2"
+      - name: masterNodeCount
+        value: "1"
+      repoRef:
+        name: manifests
+        path: spark/odh-spark-operator
+    name: odh-spark-operator
+  repos:
+  - name: manifests
+    uri: https://github.com/vpavlin/odh-kf-manifests/tarball/master
+  version: v0.7-branch-openshift
+status:
